@@ -39,7 +39,6 @@ struct Sensores {
 };
 
 
-
 class Comportamiento {
   public:
     vector< vector< unsigned char> > mapaResultado;

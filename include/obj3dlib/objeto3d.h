@@ -62,14 +62,6 @@ public:
 
 
     virtual Objeto3D * clone(){return new Objeto3D(*this);}
-
-
-
-
-
-
-
-
 };
 
 
