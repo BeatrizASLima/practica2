@@ -196,6 +196,9 @@ private:
 
    bool hayPlan = false;
 
+   bool rescatado = false;         // Indica si ya rescatou a la víctima
+   bool regresoPlaneado = false;
+
    void actualizarEstado(const Sensores &sensores);
    Action tomarDecisionNivel_0(const Sensores &sensores);
    Action tomarDecisionNivel_1(const Sensores &sensores);

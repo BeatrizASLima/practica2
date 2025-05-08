@@ -42,7 +42,7 @@ Action ComportamientoAuxiliar::think(Sensores sensores)
 		accion = ComportamientoAuxiliarNivel_3 (sensores);
 		break;
 	case 4:
-		// accion = ComportamientoAuxiliarNivel_4 (sensores);
+		accion = ComportamientoAuxiliarNivel_4 (sensores);
 		break;
 	}
 
@@ -710,4 +710,46 @@ EstadoA ComportamientoAuxiliar::siguienteCasilla(const EstadoA &actual) {
 
 Action ComportamientoAuxiliar::ComportamientoAuxiliarNivel_4(Sensores sensores)
 {
+   actualizarEstado(sensores);
+
+   // Se não foi chamado, fica parado
+   if (!sensores.venpaca) {
+       return IDLE;
+   }
+
+   // Se já chegou ao destino, para
+   if (sensores.posF == sensores.destinoF && sensores.posC == sensores.destinoC) {
+       plan.clear();
+       return IDLE;
+   }
+
+   // Se tem plano, segue
+   if (!plan.empty()) {
+       Action accion = plan.front();
+       plan.pop_front();
+       return accion;
+   }
+
+   // Caso contrário, cria plano até a posição indicada
+   EstadoA inicio;
+   inicio.f = sensores.posF;
+   inicio.c = sensores.posC;
+   inicio.brujula = sensores.rumbo;
+   inicio.zapatillas = tieneZapatillas;
+   inicio.bikini = tieneBikini;
+
+   EstadoA objetivo;
+   objetivo.f = sensores.destinoF;
+   objetivo.c = sensores.destinoC;
+
+   plan = aEstrella(inicio, objetivo, mapaResultado, mapaCotas);
+
+   if (!plan.empty()) {
+       Action accion = plan.front();
+       plan.pop_front();
+       return accion;
+   }
+
+   // Se tudo falhar, tenta se mover de forma simples
+   return buscarAlternativa(sensores);
 }

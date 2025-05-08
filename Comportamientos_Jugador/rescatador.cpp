@@ -27,7 +27,7 @@ Action ComportamientoRescatador::think(Sensores sensores)
 		return ComportamientoRescatadorNivel_3 (sensores);
 		break;
 	case 4:
-		// accion = ComportamientoRescatadorNivel_4 (sensores);
+        return ComportamientoRescatadorNivel_4(sensores);
 		break;
 	default:
 		return IDLE;
@@ -46,6 +46,12 @@ Action ComportamientoRescatador::ComportamientoRescatadorNivel_0(Sensores s)
 }
 
 void ComportamientoRescatador::actualizarEstado(const Sensores &sensores) {
+    if (!mapaInicializado) {
+        int size = 200;
+        mapaResultado = vector<vector<unsigned char>>(size, vector<unsigned char>(size, '?'));
+        mapaCotas = vector<vector<unsigned char>>(size, vector<unsigned char>(size, 0));
+        mapaInicializado = true;
+    }
     // 1. Actualizar equipamiento (bikini/zapatillas)
     if (sensores.superficie[0] == 'K') {
         tieneBikini = true;
@@ -690,4 +696,61 @@ EstadoA ComportamientoRescatador::siguienteCasilla(const EstadoA &actual) {
 
 Action ComportamientoRescatador::ComportamientoRescatadorNivel_4(Sensores sensores)
 {
+    actualizarEstado(sensores);
+
+    static bool rescatado = false;
+    static bool regresoPlaneado = false;
+    static EstadoA objetivoBase;
+
+    // 1. Se já estamos na base após o resgate → parar
+    if (rescatado && sensores.superficie[0] == 'X') {
+        plan.clear();
+        return IDLE;
+    }
+
+    // 2. Se estamos na posição da vítima e ainda não resgatamos → interagir
+    if (!rescatado && sensores.posF == sensores.destinoF && sensores.posC == sensores.destinoC) {
+        rescatado = true;
+        objetivoBase.f = sensores.posF;
+        objetivoBase.c = sensores.posC;
+        return IDLE;
+    }
+
+    // 3. Se temos plano, continuar seguindo
+    if (!plan.empty()) {
+        Action accion = plan.front();
+        plan.pop_front();
+        return accion;
+    }
+
+    // 4. Se não temos plano, gerar
+    EstadoA inicio;
+    inicio.f = sensores.posF;
+    inicio.c = sensores.posC;
+    inicio.brujula = sensores.rumbo;
+    inicio.zapatillas = tieneZapatillas;
+    inicio.bikini = tieneBikini;
+
+    EstadoA destino;
+
+    if (!rescatado) {
+        // Caminho até a vítima
+        destino.f = sensores.destinoF;
+        destino.c = sensores.destinoC;
+    } else {
+        // Caminho de volta à base
+        destino.f = sensores.destinoF;
+        destino.c = sensores.destinoC;
+        regresoPlaneado = true;
+    }
+
+    plan = aEstrella(inicio, destino, mapaResultado, mapaCotas);
+
+    if (!plan.empty()) {
+        Action accion = plan.front();
+        plan.pop_front();
+        return accion;
+    }
+
+    return buscarAlternativa(sensores);
 }

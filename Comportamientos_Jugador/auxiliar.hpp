@@ -98,7 +98,11 @@ private:
   bool tieneBikini = false;
   int giro45Izqda;
   int giros;
-
+  
+  // Variáveis para o nível 4
+  bool rescatado = false;
+  bool regresoPlaneado = false;
+  EstadoA objetivoBase;
   /**
     * metodo para actualizar las variables de estado
     */
