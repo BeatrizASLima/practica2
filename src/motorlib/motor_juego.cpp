@@ -32,7 +32,7 @@ bool actuacionRescatador(unsigned char celdaJ_inicial, unsigned char celdaJ_fin,
   switch (accion)
   {
   case WALK:
-    if (monitor.getMapa()->casillaOcupada(0) == -1 and (abs(difAltJ) <= 1) or (monitor.get_entidad(0)->Has_Zapatillas() and (abs(difAltJ) <= 2))) // Casilla destino desocupada        monitor.get_entidad(0)->seAostio();
+    if (monitor.getMapa()->casillaOcupada(0) == -1 and ((abs(difAltJ) <= 1) or (monitor.get_entidad(0)->Has_Zapatillas() and (abs(difAltJ) <= 2)))) // Casilla destino desocupada        monitor.get_entidad(0)->seAostio();
     {
       switch (celdaJ_fin)
       {
@@ -206,7 +206,7 @@ bool actuacionRescatador(unsigned char celdaJ_inicial, unsigned char celdaJ_fin,
         break;
       }
     }
-    else if (posibleElAvance == 0 and (abs(difAltJ) <= 1) or (monitor.get_entidad(0)->Has_Zapatillas() and (abs(difAltJ) <= 2)))
+    else if (posibleElAvance == 0 and ((abs(difAltJ) <= 1) or (monitor.get_entidad(0)->Has_Zapatillas() and (abs(difAltJ) <= 2))))
     { // Es posible correr
       switch (celdaJ_fin)
       {
@@ -649,7 +649,9 @@ bool actuacionNPC(unsigned int entidad, unsigned char celda, Action accion, unsi
         pair<int, int> casilla = monitor.getMapa()->NCasillasDelante(entidad, 2);
         if (monitor.getMapa()->QuienEnCasilla(casilla.first, casilla.second) == -1 and
             monitor.getMapa()->getCelda(casilla.first, casilla.second) != 'M' and
-            monitor.getMapa()->getCelda(casilla.first, casilla.second) != 'P')
+            monitor.getMapa()->getCelda(casilla.first, casilla.second) != 'P' and
+            (monitor.getMapa()->getCelda(casilla.first, casilla.second) != 'B')
+          )
           if (aleatorio(1) == 0)
           { // Solo ocurre la mitad de las veces que el vandalo lo intenta.
             std::cout << "\tEl empujón ha sido efectivo\n";

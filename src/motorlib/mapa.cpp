@@ -1295,13 +1295,13 @@ vector<vector<unsigned char>> Mapa::vision(unsigned int Entidad)
     fov[1][7] = entidadEnCelda(fil + 2, col + 1);
     fov[1][8] = entidadEnCelda(fil + 2, col);
 
-    fov[2][9] = entidadEnCelda(fil, col + 3);
-    fov[2][10] = entidadEnCelda(fil + 1, col + 3);
-    fov[2][11] = entidadEnCelda(fil + 2, col + 3);
-    fov[2][12] = entidadEnCelda(fil + 3, col + 3);
-    fov[2][13] = entidadEnCelda(fil + 3, col + 2);
-    fov[2][14] = entidadEnCelda(fil + 3, col + 1);
-    fov[2][15] = entidadEnCelda(fil + 3, col);
+    fov[1][9] = entidadEnCelda(fil, col + 3);
+    fov[1][10] = entidadEnCelda(fil + 1, col + 3);
+    fov[1][11] = entidadEnCelda(fil + 2, col + 3);
+    fov[1][12] = entidadEnCelda(fil + 3, col + 3);
+    fov[1][13] = entidadEnCelda(fil + 3, col + 2);
+    fov[1][14] = entidadEnCelda(fil + 3, col + 1);
+    fov[1][15] = entidadEnCelda(fil + 3, col);
 
     fov[2][1] = alturaEnCelda(fil, col + 1);
     fov[2][2] = alturaEnCelda(fil + 1, col + 1);
